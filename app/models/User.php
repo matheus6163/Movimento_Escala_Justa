@@ -1,8 +1,6 @@
 <?php
 namespace App\Models;
 
-// Database pertence ao mesmo namespace App\Models.
-
 class User 
 {
     public static function all(): array
@@ -38,7 +36,7 @@ class User
     {
         $sql = 'SELECT 1 FROM users WHERE cpf = ?';
         $params = [$cpf];
-        if ($ignoreId !== null) { {
+        if ($ignoreId !== null) {
             $sql .= ' AND id <> ?';
             $params[] = $ignoreId;
         }
@@ -46,7 +44,7 @@ class User
         $stmt->execute($params);
         return (bool) $stmt->fetchColumn();
     }
-    }
+
     public static function create($name, $lastName, $email, $cpf, $birth): int{
         $stmt = Database::connect()->prepare(
             'INSERT INTO users (name, last_name, email, cpf, birth_date) VALUES (?, ?, ?, ?,?)'
@@ -54,13 +52,14 @@ class User
         $stmt->execute([$name, $lastName, $email, $cpf, $birth]);
         return (int) Database::connect()->lastInsertId();
     }
+
     public static function update(int $id, array $data): bool 
     {
         $stmt = Database::connect()->prepare(
-        'UPDATE users
-            SET name = ?, last_name = ?, email = ?, cpf = ?, birth_date = ?
-        WHERE id = ?'
-    );
+            'UPDATE users
+                SET name = ?, last_name = ?, email = ?, cpf = ?, birth_date = ?
+            WHERE id = ?'
+        );
         return $stmt->execute([
             $data['name'], $data['last_name'], $data['email'],
             $data['cpf'], $data['birth_date'],

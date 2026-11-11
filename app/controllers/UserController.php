@@ -14,6 +14,11 @@ class UserController
             'users' => User::all(),
         ]);
     }
+    public function conteudo(): void{
+        $this->render('users/conteudo', [
+            'title' => 'Conteúdo',
+        ]);
+    }
     public function show(string $id = ''): void
     {
         $user =  User::find((int) $id);
@@ -63,7 +68,7 @@ class UserController
             return;
         }
 
-        User::create($input['name'], $input['lastName'], $input['email'], $input['cpf'],
+        User::create($input['name'], $input['last_name'], $input['email'], $input['cpf'],
     $input['birth_date']);
         header('Location: ' . url('user/index'));
         exit;
@@ -159,7 +164,6 @@ class UserController
                 'user' => $user,
                 'errors' => $errors,
                 'old' => $input,
-                banco
                 'csrf' => $this->csrfToken(),
             ]);
             return;
