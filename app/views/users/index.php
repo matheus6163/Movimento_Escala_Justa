@@ -9,8 +9,6 @@
         <tr>
             <th>Nome completo</th>
             <th>E-mail</th>
-            <th>CPF</th>
-            <th>Nascimento</th>
             <th>Ações</th>
         </tr>
     </thead>
@@ -19,8 +17,6 @@
         <tr>
             <td><?= e($u['name'] . ' ' . $u['last_name']) ?></td>
             <td><?= e($u['email']) ?></td>
-            <td><?= e(format_cpf($u['cpf'])) ?></td>
-            <td><?= e(format_date($u['birth_date'])) ?></td>
             <td class="acoes">
                 <a class="btn btn-sec" href="<?= url('user/show/'.(int)$u['id']) ?>">Ver</a>
                 <a class="btn" href="<?= url('user/edit/' . (int) $u['id']) ?>">Editar</a>

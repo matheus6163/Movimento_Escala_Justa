@@ -68,8 +68,7 @@ class UserController
             return;
         }
 
-        User::create($input['name'], $input['last_name'], $input['email'], $input['cpf'],
-    $input['birth_date']);
+        User::create($input['name'], $input['last_name'], $input['email']);
         header('Location: ' . url('user/index'));
         exit;
     }
@@ -110,8 +109,6 @@ class UserController
             'name' => trim($_POST['name'] ?? ''),
             'last_name' => trim($_POST['last_name'] ?? ''),
             'email' => trim($_POST['email'] ?? ''),
-            'cpf' => preg_replace('/\D/', '', $_POST['cpf'] ?? ''), // só dígitos
-            'birth_date' => trim($_POST['birth_date'] ?? ''),
             ];
     }
     
@@ -121,9 +118,6 @@ class UserController
 
         if (!isset($errors['email']) && User::emailExists($input['email'], $ignoreId)) {
             $errors['email'] = 'Este e-mail já está cadastrado.';
-        }
-        if (!isset($errors['cpf']) && User::cpfExists($input['cpf'], $ignoreId)) {
-            $errors['cpf'] = 'Este CPF já está cadastrado.';
         }
         return $errors;
     }
