@@ -1,4 +1,3 @@
-<link href="public/css/styles.css" rel="stylesheet" />
 <div class="container mt-5">
     <div class="row">
         <div class="">

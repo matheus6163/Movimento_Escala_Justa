@@ -3,16 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title><?= e($title ?? 'Projeto MVC') ?></title>
-
-   
+    <title><?= e($title ?? 'Projeto MVC') ?></title>    
     <link rel="stylesheet" href="<?= e(asset('css/estilo.css')) ?>">
+    <link rel="stylesheet" href="<?= e(asset('css/styles.css')) ?>">
+
 </head>
-<body>
+<body class="body">
     <header class="topo">
         <img src="<?= e(asset('img/logo.png')) ?>" alt="Logo do projeto"
              width="40" height="40">
         <nav>
+            <a href="<?= e(url('user/conteudo')) ?>">Inicio</a>
             <a href="<?= e(url('user/index')) ?>">Usuários</a>
             <a href="<?= e(url('user/create')) ?>">Novo usuário</a>
         </nav>

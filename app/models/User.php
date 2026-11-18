@@ -44,7 +44,7 @@ class User
     {
         $stmt = Database::connect()->prepare(
             'UPDATE users
-                SET name = ?, last_name = ?, email = ?, 
+                SET name = ?, last_name = ?, email = ?
             WHERE id = ?'
         );
         return $stmt->execute([

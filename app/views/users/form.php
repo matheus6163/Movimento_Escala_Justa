@@ -1,8 +1,6 @@
-<a href="<?= e(url('user')) ?>">Voltar</a>
+<form class="cadastro" method="post" action="<?= e(url('user/store')) ?>" data-validate>
+    <h2>Cadastrar</h2>
 
-<h1><?= e($title) ?></h1>
-
-<form method="post" action="<?= e(url('user/store')) ?>" data-validate>
     <input type="hidden" name="csrf" value="<?= e($csrf) ?>">
 
     <label>Nome
