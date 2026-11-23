@@ -19,6 +19,15 @@ class User
         return $stmt->fetch() ?: null;
     }
 
+    public static function findByEmail(string $email): ?array
+    {
+        $stmt = Database::connect()->prepare(
+            'SELECT id, name, email, password_hash, role FROM users WHERE email = ?'
+        );
+        $stmt->execute([$email]);
+        return $stmt->fetch() ?: null;
+    }
+
     public static function emailExists(string $email, ?int $ignoreId = null): bool
     {
         $sql = 'SELECT 1 FROM users WHERE email = ?';
