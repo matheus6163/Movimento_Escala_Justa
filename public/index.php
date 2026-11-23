@@ -8,8 +8,11 @@ define('BASE_URL', rtrim(str_replace('\\', '/', $base), '/'));
 
 // 1) Autoload
 spl_autoload_register(function (string $class) {
-    $file = __DIR__ . '/../app/'
-        . str_replace(['App\\', '\\'], ['', '/'], $class) . '.php';
+    // Pastas em minúsculo (controllers/, models/...) para funcionar também no Linux.
+    $parts = explode('\\', preg_replace('/^App\\\\/', '', $class));
+    $name  = array_pop($parts);
+    $dir   = $parts ? strtolower(implode('/', $parts)) . '/' : '';
+    $file  = __DIR__ . '/../app/' . $dir . $name . '.php';
     if (is_file($file))
         require $file;
 });
@@ -23,7 +26,8 @@ $method = $url[1] ?? 'index';
 $params = array_slice($url, 2);
 
 // 3) Validação e despacho
-if (!class_exists($controller) || !method_exists($controller, $method)) {
+if (!class_exists($controller) || !method_exists($controller, $method)
+    || !(new ReflectionMethod($controller, $method))->isPublic()) {
     http_response_code(404);
     exit("Página não encontrada");
 }

@@ -16,10 +16,22 @@
             <a href="<?= e(url('user/conteudo')) ?>">Inicio</a>
             <a href="<?= e(url('user/index')) ?>">Usuários</a>
             <a href="<?= e(url('user/create')) ?>">Novo usuário</a>
+            <?php if (is_admin()): ?>
+                <a href="<?= e(url('admin/index')) ?>">Painel admin</a>
+            <?php endif; ?>
+            <?php if (current_user()): ?>
+                <form method="post" action="<?= e(url('auth/logout')) ?>" style="display:inline">
+                    <input type="hidden" name="csrf" value="<?= e(csrf_token()) ?>">
+                    <button type="submit">Sair</button>
+                </form>
+            <?php else: ?>
+                <a href="<?= e(url('auth/login')) ?>">Entrar</a>
+            <?php endif; ?>
         </nav>
     </header>
 
     <main>
+        <?php if ($msg = flash()): ?><p class="aviso"><?= e($msg) ?></p><?php endif; ?>
         <?= $content ?>
     </main>
 

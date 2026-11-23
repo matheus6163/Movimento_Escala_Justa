@@ -90,7 +90,7 @@ class UserController
 
     private function render(string $view, array $data = []): void
     {
-        $base = __DIR__ . '/../Views/';
+        $base = __DIR__ . '/../views/';
 
         $renderFile = static function (string $__file, array $__data): string {
             extract($__data, EXTR_SKIP);

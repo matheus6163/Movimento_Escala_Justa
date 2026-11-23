@@ -32,3 +32,48 @@ function format_date(?string $date): string
     $d = $date ? \DateTime::createFromFormat('Y-m-d', $date) : false;
     return $d ? $d->format('d/m/Y') : '';
 }
+
+// ===== Sessão, autenticação e CSRF =====
+function start_session(): void
+{
+    if (session_status() === PHP_SESSION_NONE) {
+        session_set_cookie_params(['httponly' => true, 'samesite' => 'Lax']);
+        session_start();
+    }
+}
+function current_user(): ?array
+{
+    start_session();
+    return $_SESSION['user'] ?? null;
+}
+function is_admin(): bool
+{
+    return (current_user()['role'] ?? '') === 'admin';
+}
+function redirect(string $path): void
+{
+    header('Location: ' . url($path));
+    exit;
+}
+function csrf_token(): string
+{
+    start_session();
+    return $_SESSION['csrf'] ??= bin2hex(random_bytes(32));
+}
+function check_csrf(): void
+{
+    start_session();
+    if (!hash_equals($_SESSION['csrf'] ?? '', $_POST['csrf'] ?? '')) {
+        http_response_code(403);
+        exit('Token inválido');
+    }
+}
+// flash(): com texto, guarda a mensagem; sem texto, devolve e apaga.
+function flash(?string $msg = null): ?string
+{
+    start_session();
+    if ($msg !== null) { $_SESSION['flash'] = $msg; return null; }
+    $m = $_SESSION['flash'] ?? null;
+    unset($_SESSION['flash']);
+    return $m;
+}
