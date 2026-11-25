@@ -12,7 +12,8 @@
     <?php endif; ?>
 
     <label>Sobrenome
-        <input name="last_name" value="<?= e($old['last_name'] ?? '') ?>">
+        <input name="last_name" required maxlength="100"
+               value="<?= e($old['last_name'] ?? '') ?>">
     </label>
     <?php if (isset($errors['last_name'])): ?>
         <p class="erro"><?= e($errors['last_name']) ?></p>
@@ -26,5 +27,14 @@
         <p class="erro"><?= e($errors['email']) ?></p>
     <?php endif; ?>
 
+    <label>Senha (mínimo 8 caracteres)
+        <input type="password" name="password" required minlength="8" maxlength="72"
+               autocomplete="new-password">
+    </label>
+    <?php if (isset($errors['password'])): ?>
+        <p class="erro"><?= e($errors['password']) ?></p>
+    <?php endif; ?>
+
     <button type="submit">Salvar</button>
 </form>
+

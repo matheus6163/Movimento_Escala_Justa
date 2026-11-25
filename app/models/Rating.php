@@ -3,7 +3,47 @@ namespace App\Models;
 
 class Rating
 {
-    /** Curtidas e descurtidas por conteúdo (RF014). */
+    /** CREATE/UPDATE (RF012/RF013): a UNIQUE (user_id, content_id) permite "upsert". */
+    public static function save(int $userId, int $contentId, int $value): bool
+    {
+        return Database::connect()->prepare(
+            'INSERT INTO ratings (user_id, content_id, value) VALUES (?, ?, ?)
+             ON DUPLICATE KEY UPDATE value = VALUES(value)'
+        )->execute([$userId, $contentId, $value]);
+    }
+
+    /** READ: voto atual do usuário (1, -1) ou null se ainda não votou. */
+    public static function valueOf(int $userId, int $contentId): ?int
+    {
+        $stmt = Database::connect()->prepare(
+            'SELECT value FROM ratings WHERE user_id = ? AND content_id = ?'
+        );
+        $stmt->execute([$userId, $contentId]);
+        $v = $stmt->fetchColumn();
+        return $v === false ? null : (int) $v;
+    }
+
+    /** READ (RF014): curtidas e descurtidas de um conteúdo. */
+    public static function countsFor(int $contentId): array
+    {
+        $stmt = Database::connect()->prepare(
+            'SELECT COALESCE(SUM(value = 1), 0) AS likes,
+                    COALESCE(SUM(value = -1), 0) AS dislikes
+               FROM ratings WHERE content_id = ?'
+        );
+        $stmt->execute([$contentId]);
+        return $stmt->fetch();
+    }
+
+    /** DELETE (RF016): o usuário desfaz o próprio voto. */
+    public static function remove(int $userId, int $contentId): bool
+    {
+        return Database::connect()
+            ->prepare('DELETE FROM ratings WHERE user_id = ? AND content_id = ?')
+            ->execute([$userId, $contentId]);
+    }
+
+    /** Totais por conteúdo (relatório do admin). */
     public static function totals(): array
     {
         return Database::connect()->query(
@@ -17,7 +57,7 @@ class Rating
         )->fetchAll();
     }
 
-    /** Quem avaliou o quê (relatório detalhado, só para o administrador). */
+    /** Quem avaliou o quê (relatório detalhado, só admin). */
     public static function details(): array
     {
         return Database::connect()->query(

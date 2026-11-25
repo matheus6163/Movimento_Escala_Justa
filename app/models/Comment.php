@@ -26,6 +26,49 @@ class Comment
         return $stmt->fetch() ?: null;
     }
 
+    /** CREATE (RF002): nasce 'pending' (default da tabela) até o admin aprovar. */
+    public static function create(int $userId, int $contentId, string $body): int
+    {
+        $db = Database::connect();
+        $db->prepare('INSERT INTO comments (user_id, content_id, body) VALUES (?, ?, ?)')
+           ->execute([$userId, $contentId, $body]);
+        return (int) $db->lastInsertId();
+    }
+
+    /** READ (RF003): aprovados de todos + os PRÓPRIOS ainda pendentes. */
+    public static function visibleFor(int $contentId, int $userId): array
+    {
+        $stmt = Database::connect()->prepare(
+            "SELECT cm.*, u.name AS user_name
+               FROM comments cm
+               JOIN users u ON u.id = cm.user_id
+              WHERE cm.content_id = ? AND (cm.status = 'approved' OR cm.user_id = ?)
+              ORDER BY cm.created_at DESC"
+        );
+        $stmt->execute([$contentId, $userId]);
+        return $stmt->fetchAll();
+    }
+
+    /**
+     * UPDATE pelo autor (RF004). O "AND user_id = ?" impede editar comentário
+     * alheio. Volta para 'pending' para o admin reaprovar.
+     */
+    public static function updateByAuthor(int $id, int $userId, string $body): bool
+    {
+        return Database::connect()->prepare(
+            "UPDATE comments SET body = ?, status = 'pending' WHERE id = ? AND user_id = ?"
+        )->execute([$body, $id, $userId]);
+    }
+
+    /** DELETE pelo autor (RF005). */
+    public static function deleteByAuthor(int $id, int $userId): bool
+    {
+        return Database::connect()
+            ->prepare('DELETE FROM comments WHERE id = ? AND user_id = ?')
+            ->execute([$id, $userId]);
+    }
+
+    // ---- usados pelo painel do administrador (moderação, RF011) ----
     public static function approve(int $id): bool
     {
         return Database::connect()
@@ -55,3 +98,4 @@ class Comment
         return (int) $stmt->fetchColumn();
     }
 }
+

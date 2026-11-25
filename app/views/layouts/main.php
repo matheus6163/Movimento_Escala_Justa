@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title><?= e($title ?? 'Projeto MVC') ?></title>    
+    <title><?= e($title ?? 'Projeto MVC') ?></title>
     <link rel="stylesheet" href="<?= e(asset('css/estilo.css')) ?>">
     <link rel="stylesheet" href="<?= e(asset('css/styles.css')) ?>">
 
@@ -14,18 +14,20 @@
              width="40" height="40">
         <nav>
             <a href="<?= e(url('user/conteudo')) ?>">Inicio</a>
-            <a href="<?= e(url('user/index')) ?>">Usuários</a>
-            <a href="<?= e(url('user/create')) ?>">Novo usuário</a>
             <?php if (is_admin()): ?>
+                <a href="<?= e(url('user/index')) ?>">Usuários</a>
+                <a href="<?= e(url('user/create')) ?>">Novo usuário</a>
                 <a href="<?= e(url('admin/index')) ?>">Painel admin</a>
             <?php endif; ?>
             <?php if (current_user()): ?>
+                <a href="<?= e(url('user/perfil')) ?>">Minha conta</a>
                 <form method="post" action="<?= e(url('auth/logout')) ?>" style="display:inline">
                     <input type="hidden" name="csrf" value="<?= e(csrf_token()) ?>">
                     <button type="submit">Sair</button>
                 </form>
             <?php else: ?>
                 <a href="<?= e(url('auth/login')) ?>">Entrar</a>
+                <a href="<?= e(url('user/create')) ?>">Cadastrar-se</a>
             <?php endif; ?>
         </nav>
     </header>
@@ -38,3 +40,4 @@
     <script src="<?= e(asset('js/app.js')) ?>" defer></script>
 </body>
 </html>
+

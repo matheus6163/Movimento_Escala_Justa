@@ -32,21 +32,6 @@ function format_date(?string $date): string
     $d = $date ? \DateTime::createFromFormat('Y-m-d', $date) : false;
     return $d ? $d->format('d/m/Y') : '';
 }
-<<<<<<< HEAD
-// Verifica se o usuário atual está logado e é um administrador
-function verificarAdmin(): void
-{
-    if (session_status() === PHP_SESSION_NONE) {
-        session_start();
-    }
-
-    // Se não estiver logado ou o tipo não for administrador, redireciona para o login
-    if (!isset($_SESSION['id_usuario']) || ($_SESSION['tipo_usuario'] ?? '') !== 'administrador') {
-        header('Location: ' . url('user/login')); // Ajuste a rota de login conforme o seu router.php
-        exit;
-    }
-}
-=======
 
 // ===== Sessão, autenticação e CSRF =====
 function start_session(): void
@@ -92,4 +77,22 @@ function flash(?string $msg = null): ?string
     unset($_SESSION['flash']);
     return $m;
 }
->>>>>>> correção
+
+// ===== Guardas de acesso (usadas nos controllers) =====
+// require_login(): exige usuário logado; senão manda para o login.
+function require_login(): void
+{
+    if (current_user() === null) {
+        flash('Faça login para continuar.');
+        redirect('auth/login');
+    }
+}
+// require_admin(): exige login E perfil de administrador.
+function require_admin(): void
+{
+    require_login();
+    if (!is_admin()) {
+        http_response_code(403);
+        exit('Acesso restrito ao administrador.');
+    }
+}
