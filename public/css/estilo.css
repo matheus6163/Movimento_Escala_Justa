@@ -1,12 +1,30 @@
 * { box-sizing: border-box; }
 
-.body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    color: #222;
-    background-color: #7A9CC6;
+body, .body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  color: #222;
+  background-color: #7A9CC6 !important;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
-
+main {
+  flex: 1;
+  width: 100%;
+  padding: 20px;
+}
+main:has(.cadastro),
+main:has(.perfil) {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding-top: 60px;
+}
+main h1 {
+  width: 400px;
+}
 .topo {
     display: flex;
     align-items: center;
@@ -15,9 +33,6 @@
     background: #1f3864;
 }
 .topo a { color: #fff; margin-right: 1rem; text-decoration: none; }
-
-main { max-width: 720px; margin: 0 auto 0 auto; h1{width:400px}; align-items: center; display:flex; flex-direction: column;}
-
 label { display: block; margin-top: 1rem; }
 input { width: 100%; padding: 0.5rem; }
 button { margin-top: 1rem; padding: 0.5rem 1.25rem; }
@@ -50,14 +65,13 @@ button { margin-top: 1rem; padding: 0.5rem 1.25rem; }
 .cadastro{
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;   
     align-items: center;
     background:#ffffff;
     border-radius: 10px;
     width: 400px;
-    height: auto;
-   
-    
+    height: 470px;
+    padding: 30px 20px;
 }
 .cadastro button{
     background: #4776c7;
@@ -68,11 +82,15 @@ button { margin-top: 1rem; padding: 0.5rem 1.25rem; }
     width: 300px;
     margin: 20px ;
 }
+.cadastro button:hover{
+    background: #1f3864;
+    color: #fff;
+}
 .cadastro input{
     width: 300px;
     height: 45px;
     padding: 0.5rem;
-    margin: 10px;
+    margin: 8px 0 0 0;
     border-radius: 10px;
     border: 1px solid #000000;
 }
@@ -89,6 +107,30 @@ button { margin-top: 1rem; padding: 0.5rem 1.25rem; }
     font-size: 1.5rem;
     margin: 20px;
     font-family:monospace;
-    font-size: 40px;
     margin-bottom: 0;
+    margin-top:0px;
+    font-size: 32px;
+}
+.cadastro p{
+    color: #141313;
+    font-size: 1.2rem;
+    padding-top: 10px;
+    padding-left: 30px;
+    padding-bottom: 73px;
+}
+
+.perfil {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 24px;
+    flex-wrap: wrap;
+    background: transparent;
+    width: 100%;
+}
+.titulo-perfil{
+    font-size: 60px;
+    font-family: monospace;
+    color: #ffffff;
 }
